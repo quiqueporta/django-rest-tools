@@ -27,7 +27,7 @@ NearToPointFilter
 
 .. code-block:: python
 
-    from django-rest-tools.filters import NearToPointFilter
+    from django_rest_tools.filters import NearToPointFilter
 
     class LocationsList(generics.ListAPIView):
 
