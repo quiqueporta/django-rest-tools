@@ -24,9 +24,9 @@ install:
   - python setup.py -q develop
 
 before_script:
-  - createdb drf_tools_tests
-  - psql -U postgres -d drf_tools_tests -c "CREATE EXTENSION postgis;"
-  - psql -U postgres -d drf_tools_tests -c "CREATE EXTENSION postgis_topology;"
+  - createdb django_rest_tools_tests
+  - psql -U postgres -d django_rest_tools_tests -c "CREATE EXTENSION postgis;"
+  - psql -U postgres -d django_rest_tools_tests -c "CREATE EXTENSION postgis_topology;"
 
 # command to run tests, e.g. python setup.py test
 script:
