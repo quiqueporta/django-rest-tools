@@ -13,12 +13,12 @@ def get_install_requires():
 
 setup(
     name='django-rest-tools',
-    summary=open('README.rst').read(),
     version=get_version(),
     license='GPLv3',
     author='Quique Porta',
     author_email='quiqueporta@gmail.com',
     description='Tools for Django Rest Framework',
+    long_description=open('README.rst').read(),
     url='https://github.com/quiqueporta/django-rest-tools',
     download_url='https://github.com/quiqueporta/django-rest-tools/releases',
     keywords=['django', 'djangorestframework', 'tools'],
