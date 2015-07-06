@@ -3,14 +3,6 @@ from setuptools import setup
 from django_rest_tools import get_version
 
 
-def get_install_requires():
-    requirements = []
-    for line in open('requirements.txt').readlines():
-        if line.startswith('#') or line == '' or line.startswith('http') or line.startswith('git'):
-            continue
-        requirements.append(line)
-    return requirements
-
 setup(
     name='django-rest-tools',
     version=get_version(),
@@ -23,7 +15,7 @@ setup(
     download_url='https://github.com/quiqueporta/django-rest-tools/releases',
     keywords=['django', 'djangorestframework', 'tools'],
     packages=['django_rest_tools'],
-    install_requires=get_install_requires(),
+    install_requires=['django', 'djangorestframework'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
