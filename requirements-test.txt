@@ -1,0 +1,5 @@
+psycopg2
+django>=1.7
+djangorestframework>=3.0.4
+coverage
+coveralls
