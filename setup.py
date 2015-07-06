@@ -12,7 +12,7 @@ def get_install_requires():
     return requirements
 
 setup(
-    name='drf-tools',
+    name='django-rest-tools',
     summary=open('README.rst').read(),
     version=get_version(),
     license='GPLv3',
