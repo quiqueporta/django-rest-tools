@@ -25,7 +25,7 @@ setup(
     packages=['django_rest_tools'],
     install_requires=get_install_requires(),
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Framework :: Django',
         'Intended Audience :: Developers',
