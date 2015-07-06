@@ -1,6 +1,6 @@
 from setuptools import setup
 
-from drf_tools import get_version
+from django_rest_tools import get_version
 
 
 def get_install_requires():
@@ -22,7 +22,7 @@ setup(
     url='https://github.com/quiqueporta/drf-tools',
     download_url='https://github.com/quiqueporta/drf-tools/releases',
     keywords=['django', 'djangorestframework', 'tools'],
-    packages=['drf_tools'],
+    packages=['django_rest_tools'],
     install_requires=get_install_requires(),
     classifiers=[
         'Development Status :: 3 - Alpha',
