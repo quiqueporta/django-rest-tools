@@ -45,8 +45,8 @@ eg:.
 .. |Build Status| image:: https://travis-ci.org/quiqueporta/django-rest-tools.svg?branch=master
     :target: https://travis-ci.org/quiqueporta/django-rest-tools
 
-.. |Coverage Status| image:: https://coveralls.io/repos/quiqueporta/django-rest-tools/badge.svg
-  :target: https://coveralls.io/r/quiqueporta/django-rest-tools
+.. |Coverage Status| image:: https://coveralls.io/repos/quiqueporta/django-rest-tools/badge.svg?branch=master
+  :target: https://coveralls.io/r/quiqueporta/django-rest-tools?branch=master
 
 .. |Requirements Status| image:: https://requires.io/github/quiqueporta/django-rest-tools/requirements.svg?branch=master
      :target: https://requires.io/github/quiqueporta/django-rest-tools/requirements/?branch=master
