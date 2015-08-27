@@ -25,14 +25,18 @@ VALENCIA = 'Valencia'
 class TestFactory(object):
 
     @staticmethod
-    def create_location(name, longitude, latitude, date=None):
+    def create_location(name, longitude, latitude, date=None, date_time=None):
         if date is None:
             date = datetime.now().date()
+
+        if date_time is None:
+            date_time = datetime.now()
 
         location = Location(
             name=name,
             location=Point(longitude, latitude),
-            date=date
+            date=date,
+            date_time=date_time
         )
 
         location.save()
@@ -91,7 +95,7 @@ class NearToPointFilterTest(APITestCase):
         self.assertEqual(VALENCIA, response.data[0]['name'])
 
 
-class DateTimeStampFieldTest(APITestCase):
+class DateToTimeStampFieldTest(APITestCase):
 
     def setUp(self):
         self.my_date = datetime.strptime("2015-08-27", "%Y-%m-%d").date()
@@ -121,4 +125,36 @@ class DateTimeStampFieldTest(APITestCase):
 
         location = Location.objects.get(id=location_serializer.data['id'])
         self.assertEqual(self.my_date, location.date)
+
+
+class DateTimeToTimeStampFieldTest(APITestCase):
+
+    def setUp(self):
+        self.my_date = datetime.strptime("2015-08-27", "%Y-%m-%d")
+        self.my_date_in_timestamp = datetime_to_timestamp(self.my_date)
+
+    def test_the_representation_of_datetime_field_is_a_timestamp(self):
+
+        location_in_valencia = TestFactory.create_location(VALENCIA, -0.362286, 39.494427, date_time=self.my_date)
+        location_serializer = LocationListSerializer(location_in_valencia)
+
+        self.assertIsInstance(location_serializer.data['date'], int)
+        self.assertEqual(self.my_date_in_timestamp, location_serializer.data['date'])
+
+    def test_serializer_receive_timestamp_and_stores_datetime_into_database(self):
+
+        data = {
+            'name': VALENCIA,
+            'location': Point(0, 0),
+            'date_time': self.my_date_in_timestamp
+        }
+
+        location_serializer = LocationListSerializer(data=data)
+
+        self.assertTrue(location_serializer.is_valid())
+
+        location_serializer.save()
+
+        location = Location.objects.get(id=location_serializer.data['id'])
+        self.assertEqual(self.my_date, location.date_time)
 
