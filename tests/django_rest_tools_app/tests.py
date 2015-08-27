@@ -3,9 +3,12 @@ from __future__ import absolute_import, unicode_literals
 
 from django.contrib.gis.geos import Point
 from django.core.urlresolvers import reverse
+from django.utils.datetime_safe import datetime
 from rest_framework import status
-
 from rest_framework.test import APITestCase
+
+from django_rest_tools.fields import datetime_to_timestamp
+from django_rest_tools_app.serializers import LocationListSerializer
 
 from .models import Location
 from .views import LocationsList
@@ -19,22 +22,33 @@ HUESCA = 'Huesca'
 BARCELONA = 'Barcelona'
 VALENCIA = 'Valencia'
 
+class TestFactory(object):
+
+    @staticmethod
+    def create_location(name, longitude, latitude, date=None):
+        if date is None:
+            date = datetime.now().date()
+
+        location = Location(
+            name=name,
+            location=Point(longitude, latitude),
+            date=date
+        )
+
+        location.save()
+
+        return location
+
+
 
 class NearToPointFilterTest(APITestCase):
 
     def setUp(self):
 
-        self.location_in_valencia = self._create_location(VALENCIA, -0.362286, 39.494427)
-        self.location_in_barcelona = self._create_location(BARCELONA, 2.1487679, 41.39479)
-        self.location_in_huesca = self._create_location(HUESCA, -0.4058484, 42.1359063)
-        self.location_in_zaragoza = self._create_location(ZARAGOZA, -0.9270592, 41.6915748)
-
-    def _create_location(self, name, long, lat):
-        location = Location()
-        location.name = name
-        location.location = Point(long, lat)
-        location.save()
-        return location
+        self.location_in_valencia = TestFactory.create_location(VALENCIA, -0.362286, 39.494427)
+        self.location_in_barcelona = TestFactory.create_location(BARCELONA, 2.1487679, 41.39479)
+        self.location_in_huesca = TestFactory.create_location(HUESCA, -0.4058484, 42.1359063)
+        self.location_in_zaragoza = TestFactory.create_location(ZARAGOZA, -0.9270592, 41.6915748)
 
     def test_filter_is_not_applied_if_no_point_field_filter_provided(self):
         LocationsList.point_field_filter = ''
@@ -75,3 +89,36 @@ class NearToPointFilterTest(APITestCase):
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         self.assertEqual(1, len(response.data))
         self.assertEqual(VALENCIA, response.data[0]['name'])
+
+
+class DateTimeStampFieldTest(APITestCase):
+
+    def setUp(self):
+        self.my_date = datetime.strptime("2015-08-27", "%Y-%m-%d").date()
+        self.my_date_in_timestamp = datetime_to_timestamp(self.my_date)
+
+    def test_the_representation_of_date_field_is_a_timestamp(self):
+
+        location_in_valencia = TestFactory.create_location(VALENCIA, -0.362286, 39.494427, date=self.my_date)
+        location_serializer = LocationListSerializer(location_in_valencia)
+
+        self.assertIsInstance(location_serializer.data['date'], int)
+        self.assertEqual(self.my_date_in_timestamp, location_serializer.data['date'])
+
+    def test_serializer_receive_timestamp_and_stores_date_into_database(self):
+
+        data = {
+            'name': VALENCIA,
+            'location': Point(0, 0),
+            'date': self.my_date_in_timestamp
+        }
+
+        location_serializer = LocationListSerializer(data=data)
+
+        self.assertTrue(location_serializer.is_valid())
+
+        location_serializer.save()
+
+        location = Location.objects.get(id=location_serializer.data['id'])
+        self.assertEqual(self.my_date, location.date)
+
