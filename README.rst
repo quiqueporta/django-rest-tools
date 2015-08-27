@@ -42,6 +42,79 @@ eg:.
 ``/location/?max_distance=40&lat=-40.4862&long=-0.39536``
 
 
+Fields
+------
+
+DateToTimeStampField
+~~~~~~~~~~~~~~~~~~~~
+
+``models.py:``
+
+.. code-block:: python
+
+    class MyModel(models.Model):
+        date = models.DateField()
+
+
+``serializers.py:``
+
+.. code-block:: python
+
+        class MySerializer(serializers.ModelSerializer):
+
+            date = DateToTimeStampField()
+
+            class Meta:
+                model = MyModel
+                fields = ('id', 'date',)
+
+The representation of the serializer is like this:
+
+.. code-block:: javascript
+
+    {
+        'id': 1,
+        'date': 1440626400000
+    }
+
+But into the database stores '2015-08-27'
+
+
+DateTimeToTimeStampField
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+``models.py:``
+
+.. code-block:: python
+
+    class MyModel(models.Model):
+        date = models.DateTimeField()
+
+
+``serializers.py:``
+
+.. code-block:: python
+
+        class MySerializer(serializers.ModelSerializer):
+
+            date = DateTimeToTimeStampField()
+
+            class Meta:
+                model = MyModel
+                fields = ('id', 'date',)
+
+The representation of the serializer is like this:
+
+.. code-block:: javascript
+
+    {
+        'id': 1,
+        'date': 1440688376
+    }
+
+But into the database stores '2015-08-27 15:12:56 UTC'
+
+
 .. |Build Status| image:: https://travis-ci.org/quiqueporta/django-rest-tools.svg?branch=master
     :target: https://travis-ci.org/quiqueporta/django-rest-tools
 
