@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, unicode_literals
+from __future__ import absolute_import, unicode_literals, print_function
 
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import D
@@ -29,15 +29,8 @@ class NearToPointFilter(filters.BaseFilterBackend):
         if not longitude and not latitude:
             return queryset
 
-        try:
-            latitude = float(latitude)
-        except ValueError:
-            raise ParseError('Invalid latitude string supplied for parameter {0}'.format(latitude))
-
-        try:
-            longitude = float(longitude)
-        except ValueError:
-            raise ParseError('Invalid longitude string supplied for parameter {0}'.format(longitude))
+        latitude = self._parse_param_to_float(value=latitude, param_name='latitude')
+        longitude = self._parse_param_to_float(value=longitude, param_name='longitude')
 
         location = Point(float(longitude), float(latitude))
 
@@ -47,3 +40,10 @@ class NearToPointFilter(filters.BaseFilterBackend):
             )
 
         return queryset.distance(location, field_name=point_field).order_by('distance')
+
+    def _parse_param_to_float(self, value, param_name):
+        try:
+            value = float(value)
+        except ValueError:
+            raise ParseError('Invalid {} string supplied for parameter {}'.format(param_name, value))
+        return value
