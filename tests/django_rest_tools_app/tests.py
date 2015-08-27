@@ -126,6 +126,27 @@ class DateToTimeStampFieldTest(APITestCase):
         location = Location.objects.get(id=location_serializer.data['id'])
         self.assertEqual(self.my_date, location.date)
 
+    def test_serializer_fails_if_no_integer_is_assigned(self):
+
+        data = {
+            'name': VALENCIA,
+            'location': Point(0, 0),
+            'date': 'FAIL'
+        }
+
+        location_serializer = LocationListSerializer(data=data)
+
+        self.assertFalse(location_serializer.is_valid())
+
+    def test_serializer_returns_none_if_no_value_in_date_field(self):
+
+        location_in_valencia = TestFactory.create_location(VALENCIA, -0.362286, 39.494427)
+        location_in_valencia.date = None
+        location_in_valencia.save()
+        location_serializer = LocationListSerializer(location_in_valencia)
+
+        self.assertIsNone(location_serializer.data['date'])
+
 
 class DateTimeToTimeStampFieldTest(APITestCase):
 
@@ -158,3 +179,23 @@ class DateTimeToTimeStampFieldTest(APITestCase):
         location = Location.objects.get(id=location_serializer.data['id'])
         self.assertEqual(self.my_date, location.date_time)
 
+    def test_serializer_fails_if_no_integer_is_assigned(self):
+
+        data = {
+            'name': VALENCIA,
+            'location': Point(0, 0),
+            'date': 'FAIL'
+        }
+
+        location_serializer = LocationListSerializer(data=data)
+
+        self.assertFalse(location_serializer.is_valid())
+
+    def test_serializer_returns_none_if_no_value_in_datetime_field(self):
+
+        location_in_valencia = TestFactory.create_location(VALENCIA, -0.362286, 39.494427)
+        location_in_valencia.date_time = None
+        location_in_valencia.save()
+        location_serializer = LocationListSerializer(location_in_valencia)
+
+        self.assertIsNone(location_serializer.data['date_time'])

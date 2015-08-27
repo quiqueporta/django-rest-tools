@@ -63,8 +63,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'django_rest_tools_tests',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
+        'USER': 'tomas',
+        'PASSWORD': '12345',
         'HOST': 'localhost',
         'PORT': ''
     }
